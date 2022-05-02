@@ -1,5 +1,6 @@
 # VeryOK
 
-Okhttp3封装，只需一段json就能控制发包，方便测试调用。
+Okhttp3封装，只需一段json字符串就能控制发包，方便测试调用。
 
-![image](https://user-images.githubusercontent.com/71825704/166251204-6b6977bc-07b0-4c24-b5b1-0f07b5b76283.png)
+![image](https://user-images.githubusercontent.com/71825704/166252931-c20e142a-fe08-4ded-af9c-1cbe03efe125.png)
+
