@@ -272,7 +272,7 @@ public class Oktest {
     public static void main(String[] args) throws IOException, InterruptedException {
         Random r = new Random();
 
-        //        ******************入参示例*******************
+        //        *********************入参示例*******************
 //        {
 //             "method":"post",
 //            "url": "https://baidu.com",
@@ -280,7 +280,7 @@ public class Oktest {
 //                               "a": "jige",
 //                              "User-Agent": "aaaa"
 //        },
-//            "data": "{\"test1\":\"m\",\"test2\":\"鸡你\",\"test3\":\"太美\"}",
+//            "data": "{\"test1\":\"m\",\"test2\":\"一\",\"test3\":\"二\"}",
 //                "proxy": "127.0.0.1:8080",   //不需要代理时去掉这个Key Value
 //                "timeout": 7                //若没有这个key value，timeout默认为10秒
 //        }
