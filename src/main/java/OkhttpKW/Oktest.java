@@ -203,7 +203,7 @@ public class Oktest {
         return (String) resResultMap.get("resCode");
     }
 
-    //方便的run
+    //传入一串json，方便地run
     public String run(String configstr){
         //解析入参json
         JSONObject config = JSON.parseObject(configstr);
