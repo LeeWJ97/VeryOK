@@ -34,7 +34,7 @@ public class Oktest {
     private int timeout;
 
     //忽略SSL证书验证
-    private void setBuilderIgnoreSSL() {
+    public void setBuilderIgnoreSSL() {
         try {
             // Create a trust manager that does not validate certificate chains
             final TrustManager[] trustAllCerts = new TrustManager[] {
@@ -73,7 +73,7 @@ public class Oktest {
     }
 
     //设置代理
-    private void setBuilderProxy(String hostport){
+    public void setBuilderProxy(String hostport){
         try {
             String[] hostportarray = hostport.split(":");
             SocketAddress sa = new InetSocketAddress(hostportarray[0], Integer.parseInt(hostportarray[1]));
