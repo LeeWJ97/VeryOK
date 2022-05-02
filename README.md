@@ -1,16 +1,5 @@
 # VeryOK
 
 Okhttp3封装，只需一段json就能控制发包，方便测试调用。
-        //        ******************入参示例******************
-        //        ******************入参示例******************
-//        {
-//             "method":"post",
-//            "url": "https://baidu.com",
-//                "headers": {
-//                               "a": "jige",
-//                              "User-Agent": "aaaa"
-//        },
-//            "data": "{\"test1\":\"m\",\"test2\":\"一\",\"test3\":\"二\"}",
-//                "proxy": "127.0.0.1:8080",   //不需要代理时去掉这个Key Value
-//                "timeout": 5                //若没有这个key value，timeout默认为10秒
-//        }
+
+![image](https://user-images.githubusercontent.com/71825704/166251204-6b6977bc-07b0-4c24-b5b1-0f07b5b76283.png)
