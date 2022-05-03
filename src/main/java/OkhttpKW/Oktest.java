@@ -109,8 +109,7 @@ public class Oktest {
             resMap.put("sendTime",response.sentRequestAtMillis()+"");
             resMap.put("recieveTime",response.receivedResponseAtMillis()+"");
 
-            String res = JSON.toJSONString(resMap);
-            return res;
+            return JSON.toJSONString(resMap);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -172,8 +171,7 @@ public class Oktest {
             contenttype = headers.get("Content-Type");
         }
         try{
-            MediaType mediatype= MediaType.get(contenttype);
-            return mediatype;
+            return MediaType.get(contenttype);
         }
         catch(Exception e) {
             MediaType mediatype= MediaType.get("application/json; charset=utf-8");
@@ -185,22 +183,38 @@ public class Oktest {
 
     //获取指定返回头，需传入resResult去解析获取
     public static String getResHeaderValue(String resResult,String key){
-        JSONObject resResultMap = JSON.parseObject(resResult);
-        JSONObject jresHeaders = JSON.parseObject((String) resResultMap.get("resHeaders"));
-        JSONArray resHeadersDateArray = (JSONArray) jresHeaders.get(key);
-        return (String) resHeadersDateArray.get(0);
+        try {
+            JSONObject resResultMap = JSON.parseObject(resResult);
+            JSONObject jresHeaders = JSON.parseObject((String) resResultMap.get("resHeaders"));
+            JSONArray resHeadersDateArray = (JSONArray) jresHeaders.get(key);
+            return (String) resHeadersDateArray.get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("解析返回头失败："+resResult +" 所需key："+key);
+        }
+        return null;
     }
-
     //获取返回体，需传入resResult去解析获取
     public static String getResBodyValue(String resResult){
-        JSONObject resResultMap = JSON.parseObject(resResult);
-        return (String) resResultMap.get("resBody");
+        try {
+            JSONObject resResultMap = JSON.parseObject(resResult);
+            return (String) resResultMap.get("resBody");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("解析返回体失败："+resResult);
+        }
+        return null;
     }
-
     //获取返回status code，需传入resResult去解析获取
     public static String getResCode(String resResult){
-        JSONObject resResultMap = JSON.parseObject(resResult);
-        return (String) resResultMap.get("resCode");
+        try {
+            JSONObject resResultMap = JSON.parseObject(resResult);
+            return (String) resResultMap.get("resCode");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("解析返回状态码失败："+resResult);
+        }
+        return null;
     }
 
     //传入一串json，方便地run
