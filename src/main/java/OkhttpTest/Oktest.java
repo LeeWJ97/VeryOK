@@ -300,7 +300,7 @@ public class Oktest {
 //        }
 
         //入参json
-        String postjson = "{\"method\":\"put\",\"url\":\"https://jmlin.cn/jinitaimei\",\"headers\":{\""+r.nextInt()+"\":\"jige\",\"User-Agent\":\"aaaa"+r.nextInt()+"\"},\"data\":\"{\\\"test1\\\":\\\"m\\\",\\\"test2\\\":\\\"中文\\\",\\\"test3\\\":\\\"测试\\\"}\",\"timeout\":15}";
+        String postjson = "{\"method\":\"post\",\"url\":\"https://github.com/LeeWJ97/VeryOK\",\"headers\":{\""+r.nextInt()+"\":\"jige\",\"User-Agent\":\"aaaa"+r.nextInt()+"\"},\"data\":\"{\\\"test1\\\":\\\"m\\\",\\\"test2\\\":\\\"中文\\\",\\\"test3\\\":\\\"测试\\\"}\",\"timeout\":15}";
         //跑
         Oktest ot = new Oktest();
         String result = ot.run(postjson);
