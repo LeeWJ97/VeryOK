@@ -7,6 +7,8 @@ import okhttp3.*;
 
 import javax.net.ssl.*;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
@@ -32,6 +34,8 @@ public class Oktest {
     private String proxystr;
     //超时时间
     private int timeout;
+
+
 
     //忽略SSL证书验证
     public void setBuilderIgnoreSSL() {
@@ -86,7 +90,7 @@ public class Oktest {
     }
 
     //构建client
-    private void buildClient(){
+    public void buildClient(){
         client = builder.connectTimeout(timeout, TimeUnit.SECONDS) //连接超时
                 .readTimeout(timeout, TimeUnit.SECONDS) //读取超时
                 .writeTimeout(timeout, TimeUnit.SECONDS) //写超时
@@ -109,7 +113,8 @@ public class Oktest {
             resMap.put("sendTime",response.sentRequestAtMillis()+"");
             resMap.put("recieveTime",response.receivedResponseAtMillis()+"");
 
-            return JSON.toJSONString(resMap);
+            String res = JSON.toJSONString(resMap);
+            return res;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,14 +122,14 @@ public class Oktest {
     }
 
     //Get请求，不能有请求体
-    public String doGet(String url, Map<String,String> headers){
+    public String get(String url, Map<String,String> headers,String ... body){
         setHeaders(headers);
         requestBuilder.url(url).get().build();
         return getResponse();
     }
 
     //Post请求
-    public String doPost(String url, Map<String,String> headers, String body){
+    public String post(String url, Map<String,String> headers, String body){
         setHeaders(headers);
         //创建请求体
         RequestBody rbody = RequestBody.create(body,getMediaType(headers));
@@ -133,7 +138,7 @@ public class Oktest {
     }
 
     //Put请求
-    public String doPut(String url, Map<String,String> headers, String body){
+    public String put(String url, Map<String,String> headers, String body){
         setHeaders(headers);
         //创建请求体
         RequestBody rbody = RequestBody.create(body,getMediaType(headers));
@@ -142,7 +147,7 @@ public class Oktest {
     }
 
     //Delete请求
-    public String doDelete(String url, Map<String,String> headers, String body){
+    public String delete(String url, Map<String,String> headers, String body){
         setHeaders(headers);
         //创建请求体
         RequestBody rbody = RequestBody.create(body,getMediaType(headers));
@@ -159,7 +164,6 @@ public class Oktest {
             requestBuilder.addHeader(key, headers.get(key));
         }
     }
-
     //根据传入的请求头Content-Type获取MediaType，获取失败就默认设置为application/json; charset=utf-8
     private MediaType getMediaType(Map<String, String> headers) {
         String contenttype;
@@ -171,7 +175,8 @@ public class Oktest {
             contenttype = headers.get("Content-Type");
         }
         try{
-            return MediaType.get(contenttype);
+            MediaType mediatype= MediaType.get(contenttype);
+            return mediatype;
         }
         catch(Exception e) {
             MediaType mediatype= MediaType.get("application/json; charset=utf-8");
@@ -180,7 +185,6 @@ public class Oktest {
         }
 
     }
-
     //获取指定返回头，需传入resResult去解析获取
     public static String getResHeaderValue(String resResult,String key){
         try {
@@ -217,7 +221,19 @@ public class Oktest {
         return null;
     }
 
-    //传入一串json，方便地run
+    public String invokeRequest(Object ... paramList) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        //尝试查找3个参数的方法：paramList[0]为请求方法，paramList[1]为URL, paramList[2]为headers, paramList[3]为body
+        try {
+            System.out.println((String) paramList[0]+paramList[1]+paramList[2]+paramList[3]);
+            Method target=this.getClass().getDeclaredMethod((String) paramList[0],String.class,Map.class,String.class);
+            return (String) target.invoke(this,paramList[1],paramList[2],paramList[3]);
+        } catch (Exception e) {
+            System.err.println("不支持的请求方法："+paramList[0]);
+            throw e;
+        }
+    }
+
+    //方便的run
     public String run(String configstr){
         //解析入参json
         JSONObject config = JSON.parseObject(configstr);
@@ -249,28 +265,18 @@ public class Oktest {
         }
         //构建client
         buildClient();
-        //发包获取返回
+
+        //反射发包获取返回
         try {
-            if(method == null){
-                System.out.println("method不能为null！");
-                return null;
-            }
-            switch (method){
-                case "get":
-                    return doGet(url,headers);
-                case "post":
-                    return doPost(url,headers,body);
-                case "put":
-                    return doPut(url,headers,body);
-                case "delete":
-                    return doDelete(url,headers,body);
-                default:
-                    System.err.println("不支持的请求方法："+method);
-                    return null;
-            }
-        } catch (Exception e) {
+            return invokeRequest(method,url,headers,body);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
         return null;
 //        System.out.println(getResHeaderValue(result,"date"));   //获取指定返回头
 //        System.out.println(getResBodyValue(result));    //获取返回体
@@ -280,6 +286,7 @@ public class Oktest {
     public Oktest() {
         builder = new OkHttpClient.Builder();
     }
+
 
 
 
