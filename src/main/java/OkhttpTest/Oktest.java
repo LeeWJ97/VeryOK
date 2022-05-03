@@ -224,7 +224,7 @@ public class Oktest {
     public String invokeRequest(Object ... paramList) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         //尝试查找3个参数的方法：paramList[0]为请求方法，paramList[1]为URL, paramList[2]为headers, paramList[3]为body
         try {
-            System.out.println((String) paramList[0]+paramList[1]+paramList[2]+paramList[3]);
+            //System.out.println((String) paramList[0]+paramList[1]+paramList[2]+paramList[3]);
             Method target=this.getClass().getDeclaredMethod((String) paramList[0],String.class,Map.class,String.class);
             return (String) target.invoke(this,paramList[1],paramList[2],paramList[3]);
         } catch (Exception e) {
