@@ -65,11 +65,12 @@ public class Oktest {
             // Install the all-trusting trust manager
             final SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            // Create an ssl socket factory with our all-trusting manager
-            final javax.net.ssl.SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
 
 
             if (javaVersion.startsWith("1.8")) {
+                // Create an ssl socket factory with our all-trusting manager
+                final javax.net.ssl.SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
                 builder.sslSocketFactory(sslSocketFactory);
             }
             else{
