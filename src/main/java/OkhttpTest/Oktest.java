@@ -34,8 +34,12 @@ public class Oktest {
     private String proxystr;
     //超时时间
     private int timeout;
+    //java版本
+    private String javaVersion = System.getProperty("java.version");;
 
-
+    private Oktest() {
+        builder = new OkHttpClient.Builder();
+    }
 
     //忽略SSL证书验证
     public void setBuilderIgnoreSSL() {
@@ -61,10 +65,18 @@ public class Oktest {
             // Install the all-trusting trust manager
             final SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            // Create an ssl socket factory with our all-trusting manager
-            final javax.net.ssl.SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
-            builder.sslSocketFactory(sslSocketFactory);
+
+
+            if (javaVersion.startsWith("1.8")) {
+                // Create an ssl socket factory with our all-trusting manager
+                final javax.net.ssl.SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+                builder.sslSocketFactory(sslSocketFactory);
+            }
+            else{
+                builder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager)trustAllCerts[0]);
+            }
+
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {
@@ -122,7 +134,11 @@ public class Oktest {
     }
 
     //Get请求，不能有请求体
-    public String get(String url, Map<String,String> headers,String ... body){
+    public String get(String url, Map<String, String> headers, String body){
+        return get(url, headers);
+    }
+
+    public String get(String url, Map<String, String> headers){
         setHeaders(headers);
         requestBuilder.url(url).get().build();
         return getResponse();
@@ -193,10 +209,9 @@ public class Oktest {
             JSONArray resHeadersDateArray = (JSONArray) jresHeaders.get(key);
             return (String) resHeadersDateArray.get(0);
         } catch (Exception e) {
-            e.printStackTrace();
             System.err.println("解析返回头失败："+resResult +" 所需key："+key);
+            throw e;
         }
-        return null;
     }
     //获取返回体，需传入resResult去解析获取
     public static String getResBodyValue(String resResult){
@@ -223,12 +238,15 @@ public class Oktest {
 
     public String invokeRequest(Object ... paramList) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         //尝试查找3个参数的方法：paramList[0]为请求方法，paramList[1]为URL, paramList[2]为headers, paramList[3]为body
+        Method target = null;
         try {
             //System.out.println((String) paramList[0]+paramList[1]+paramList[2]+paramList[3]);
-            Method target=this.getClass().getDeclaredMethod((String) paramList[0],String.class,Map.class,String.class);
-            return (String) target.invoke(this,paramList[1],paramList[2],paramList[3]);
+            target = this.getClass().getDeclaredMethod((String) paramList[0], String.class, Map.class, String.class);
+            return (String) target.invoke(this, paramList[1], paramList[2], paramList[3]);
+        } catch (NoSuchMethodException e) {
+            System.err.println("不支持的请求方法：" + paramList[0] + "  支持列表: " + target);
+            throw e;
         } catch (Exception e) {
-            System.err.println("不支持的请求方法："+paramList[0]);
             throw e;
         }
     }
@@ -251,7 +269,7 @@ public class Oktest {
         body = config.getString("data");
 
         //为timeout设置默认值
-        if (timeout == 0){
+        if (timeout <= 0){
             timeout = 10;
         }
         //开启代理并忽略SSL不信任证书
@@ -283,9 +301,7 @@ public class Oktest {
 //        System.out.println(getResCode(result));    //获取返回status code
     }
 
-    public Oktest() {
-        builder = new OkHttpClient.Builder();
-    }
+
 
 
 
@@ -307,7 +323,26 @@ public class Oktest {
 //        }
 
         //入参json
-        String postjson = "{\"method\":\"post\",\"url\":\"https://baidu.com/wd?=a\",\"headers\":{\""+r.nextInt()+"\":\"jige\",\"User-Agent\":\"aaaa"+r.nextInt()+"\"},\"data\":\"{\\\"test1\\\":\\\"m\\\",\\\"test2\\\":\\\"中文\\\",\\\"test3\\\":\\\"测试\\\"}\",\"timeout\":15}";
+        //String postjson = "{\"method\":\"get\",\"url\":\"https://dog.ceo/api/breeds/image/random\",\"headers\":{\""+r.nextInt()+"\":\"jige\",\"User-Agent\":\"aaaa"+r.nextInt()+"\"},\"data\":\"{\\\"test1\\\":\\\"m\\\",\\\"test2\\\":\\\"中文\\\",\\\"test3\\\":\\\"测试\\\"}\",\"timeout\":15}";
+        String postjson = """
+            {
+                "method": "post",
+                "url": "https://acs.m.taobao.com/gw/mtop.common.getTimestamp/*",
+                "headers": {
+                    "a": "jige",
+                    "User-Agent": "aaaa"
+                },
+                "data": {
+                    "test1": "m",
+                    "test2": "中文",
+                    "test3": "测试"
+                },
+                "timeout": 15,
+                //"proxy": "127.0.0.1:8080"
+
+            }
+    """;
+
         //跑
         Oktest ot = new Oktest();
         String result = ot.run(postjson);
@@ -316,7 +351,19 @@ public class Oktest {
         //获取指定返回头
         System.out.println(Oktest.getResHeaderValue(result,"date"));
         //获取返回体
-        System.out.println(Oktest.getResBodyValue(result));
+        String resBodyValue = Oktest.getResBodyValue(result);;
+        System.out.println(resBodyValue);
+
+        //解析json提取timestamp
+        JSONObject jsonObject = JSONObject.parseObject(resBodyValue);
+        String timestampString = jsonObject.getJSONObject("data").getString("t");
+        long timestamp = Long.parseLong(timestampString);
+        System.out.println(timestamp);
+        //解析json提取successMessage
+        JSONArray retArray = jsonObject.getJSONArray("ret");
+        String successMessage = retArray.getString(0);
+        System.out.println(successMessage);
+
         //获取返回status code
         System.out.println(Oktest.getResCode(result));
     }
