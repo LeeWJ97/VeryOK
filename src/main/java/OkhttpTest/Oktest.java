@@ -22,6 +22,35 @@ public class Oktest {
     private Request.Builder requestBuilder;
     //OkHttpClient对象
     private OkHttpClient client;
+
+    public String getMethod() {
+        return method;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public String getProxystr() {
+        return proxystr;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public String getJavaVersion() {
+        return javaVersion;
+    }
+
     //方法
     private String method;
     //URL
@@ -37,7 +66,7 @@ public class Oktest {
     //java版本
     private final String javaVersion = System.getProperty("java.version");
 
-    private Oktest() {
+    public Oktest() {
         builder = new OkHttpClient.Builder();
     }
 
@@ -225,15 +254,14 @@ public class Oktest {
     }
 
     //获取返回status code，需传入resResult去解析获取
-    public static String getResCode(String resResult) {
+    public static int getResCode(String resResult) {
         try {
             JSONObject resResultMap = JSON.parseObject(resResult);
-            return (String) resResultMap.get("resCode");
+            return Integer.parseInt((String) resResultMap.get("resCode"));
         } catch (Exception e) {
-            e.printStackTrace();
             System.err.println("解析返回状态码失败：" + resResult);
+            throw e;
         }
-        return null;
     }
 
     public String invokeRequest(Object... paramList) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {

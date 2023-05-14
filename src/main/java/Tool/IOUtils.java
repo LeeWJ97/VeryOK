@@ -3,8 +3,8 @@ package Tool;
 
 import java.io.*;
 
-public class IOUtil {
-    private IOUtil(){}
+public class IOUtils {
+    private IOUtils(){}
 
     /**
      * 读取文本文件内容
@@ -118,14 +118,14 @@ public class IOUtil {
 
     public static void main(String[] args) throws IOException {
         // 示例用法
-        IOUtil.writeTextFile("D:/test.txt","测试haha\r\nsss","utf8");
-        IOUtil.appendTextFile("D:/test.txt","aa啊aaa\r\nbbb","utf8");
-        String readStr = IOUtil.readTextFile("D:/test.txt", "utf8");
+        IOUtils.writeTextFile("D:/test.txt","测试haha\r\nsss","utf8");
+        IOUtils.appendTextFile("D:/test.txt","aa啊aaa\r\nbbb","utf8");
+        String readStr = IOUtils.readTextFile("D:/test.txt", "utf8");
         System.out.println(readStr);
 
-        IOUtil.writeBytesFile("D:/test.bin","test123啊".getBytes("gbk"));
-        IOUtil.appendBytesFile("D:/test.bin","\r\n呃".getBytes("gbk"));
-        ByteArrayOutputStream byteArrayOutputStream = IOUtil.readBytesFile("D:/test.bin");
+        IOUtils.writeBytesFile("D:/test.bin","test123啊".getBytes("gbk"));
+        IOUtils.appendBytesFile("D:/test.bin","\r\n呃".getBytes("gbk"));
+        ByteArrayOutputStream byteArrayOutputStream = IOUtils.readBytesFile("D:/test.bin");
         System.out.println(byteArrayOutputStream.toString("gbk"));
     }
 }
