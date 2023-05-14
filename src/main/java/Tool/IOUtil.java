@@ -126,6 +126,6 @@ public class IOUtil {
         IOUtil.writeBytesFile("D:/test.bin","test123啊".getBytes("gbk"));
         IOUtil.appendBytesFile("D:/test.bin","\r\n呃".getBytes("gbk"));
         ByteArrayOutputStream byteArrayOutputStream = IOUtil.readBytesFile("D:/test.bin");
-        System.out.println(new String(byteArrayOutputStream.toByteArray(),"gbk"));
+        System.out.println(byteArrayOutputStream.toString("gbk"));
     }
 }
