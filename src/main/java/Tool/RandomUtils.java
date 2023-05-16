@@ -10,7 +10,8 @@ public class RandomUtils {
     private static final String UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String DIGITS = "0123456789";
     private static final String SPECIAL_CHARS = "!@#$%^&*()_+-=[]{}|;':,.<>?";
-
+    private RandomUtils() {
+    }
     public static String generateRandomString(int length, boolean includeDigits, boolean includeLowerCase,
                                               boolean includeUpperCase, boolean includeSpecialChars) {
         StringBuilder characters = new StringBuilder();
