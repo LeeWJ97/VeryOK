@@ -13,12 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class FastJsonUtilsTest {
 
     @Test
-    public void testClassToJson() {
+    public void testClassToString() {
         Person person = new Person("John", 25);
         String json = FastJsonUtils.toJsonString(person);
         System.out.println(json);
         assertEquals("{\"age\":25,\"name\":\"John\"}",json);
-        // 在这里你可以添加更多的断言来验证生成的JSON字符串是否符合预期
     }
 
 
@@ -30,7 +29,6 @@ public class FastJsonUtilsTest {
         assertNotNull(person);
         assertEquals("John", person.getName());
         assertEquals(25, person.getAge());
-        // 在这里你可以添加更多的断言来验证解析的对象是否符合预期
     }
 
     @Test
@@ -44,7 +42,6 @@ public class FastJsonUtilsTest {
         Person person = personList.get(0);
         assertEquals("John", person.getName());
         assertEquals(25, person.getAge());
-        // 在这里你可以添加更多的断言来验证解析的对象是否符合预期
     }
 
     @Test
