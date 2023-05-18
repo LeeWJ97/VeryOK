@@ -10,7 +10,7 @@ class EmailUtilsTest {
 
     @Test
     void testSendEmailWithInvalidCredentials() {
-        String fromEmail = "your_email@qq.com";
+        String fromEmail = "your_email_qq.com";
         String password = "your_password";
         String toEmail = "recipient_email@example.com";
         String subject = "Hello!";

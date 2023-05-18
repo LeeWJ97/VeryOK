@@ -68,9 +68,9 @@ public class EmailUtils {
 
 
     public static void main(String[] args) throws MessagingException {
-        String fromEmail = "test@qq.com";
+        String fromEmail = "test_qq.com";
         String password = "test";
-        String toEmail = "test@qq.com";
+        String toEmail = "test_qq.com";
         String subject = "Hello!";
         String message = "This is a test email.";
         String host = "smtp.qq.com";
