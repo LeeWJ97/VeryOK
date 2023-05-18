@@ -7,7 +7,6 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Base64;
 
 public class EncryptionUtilsTest {
 
@@ -78,8 +77,12 @@ public class EncryptionUtilsTest {
         Assertions.assertNotNull(privateKey);
 
         // Encode the keys to Base64 for visualization
-        String publicKeyBase64 = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-        String privateKeyBase64 = Base64.getEncoder().encodeToString(privateKey.getEncoded());
+        //String publicKeyBase64 = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+        //String privateKeyBase64 = Base64.getEncoder().encodeToString(privateKey.getEncoded());
+        String publicKeyBase64 = EncryptionUtils.encodeToString(publicKey.getEncoded());
+        String privateKeyBase64 = EncryptionUtils.encodeToString(privateKey.getEncoded());
+
+
 
         System.out.println("Public Key: " + publicKeyBase64);
         System.out.println("Private Key: " + privateKeyBase64);
@@ -111,5 +114,38 @@ public class EncryptionUtilsTest {
         System.out.println();
 
         Assertions.assertNotNull(key);
+    }
+
+    @Test
+    public void testEncodeToString() {
+        String plainText = "Hello, World!";
+        String expectedBase64 = "SGVsbG8sIFdvcmxkIQ==";
+        String encodedString = EncryptionUtils.encodeToString(plainText);
+        Assertions.assertEquals(expectedBase64, encodedString);
+    }
+
+    @Test
+    public void testDecodeToString() {
+        String base64Text = "SGVsbG8sIFdvcmxkIQ==";
+        String expectedPlainText = "Hello, World!";
+        String decodedString = EncryptionUtils.decodeToString(base64Text);
+        System.out.println(decodedString);
+        Assertions.assertEquals(expectedPlainText, decodedString);
+    }
+
+    @Test
+    public void testEncodeToBytes() {
+        byte[] bytes = {0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x2C, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64, 0x21};
+        String expectedBase64 = "SGVsbG8sIFdvcmxkIQ==";
+        String encodedString = EncryptionUtils.encodeToString(bytes);
+        Assertions.assertEquals(expectedBase64, encodedString);
+    }
+
+    @Test
+    public void testDecodeToBytes() {
+        String base64Text = "SGVsbG8sIFdvcmxkIQ==";
+        byte[] expectedBytes = {0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x2C, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64, 0x21};
+        byte[] decodedBytes = EncryptionUtils.decodeToBytes(base64Text);
+        Assertions.assertArrayEquals(expectedBytes, decodedBytes);
     }
 }

@@ -1,6 +1,8 @@
 package Tool;
 
+import java.nio.charset.StandardCharsets;
 import java.security.*;
+import java.util.Base64;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -118,6 +120,25 @@ public class EncryptionUtils {
         keyGenerator.init(56); // 设置密钥长度为56位
         SecretKey secretKey = keyGenerator.generateKey();
         return secretKey.getEncoded();
+    }
+
+    //base64
+    public static String encodeToString(String plainText) {
+        byte[] bytes = plainText.getBytes(StandardCharsets.UTF_8);
+        return Base64.getEncoder().encodeToString(bytes);
+    }
+
+    public static String decodeToString(String base64Text) {
+        byte[] bytes = Base64.getDecoder().decode(base64Text);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    public static String encodeToString(byte[] bytes) {
+        return Base64.getEncoder().encodeToString(bytes);
+    }
+
+    public static byte[] decodeToBytes(String base64Text) {
+        return Base64.getDecoder().decode(base64Text);
     }
 
 }
