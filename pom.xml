@@ -44,6 +44,15 @@
             <artifactId>bcprov-jdk15on</artifactId>
             <version>1.70</version> <!-- 加密方式提供 -->
         </dependency>
+
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+
+
+
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
